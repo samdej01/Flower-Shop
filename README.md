@@ -2,6 +2,8 @@
 
 A simple, full-stack flower shop web application where users can browse flowers and add items to their cart. 
 
+---
+
 ## Tech Stack
 
 **Frontend**
