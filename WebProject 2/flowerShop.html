@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>متجر ليلاس</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap">
+    <style>
+        body {
+            font-family: 'Cairo', sans-serif;
+            margin: 0;
+            padding: 0;
+            color: #ffffff;
+            direction: rtl;
+            background-image: url('https://wallpapers.com/images/high/pastel-pink-floral-desktop-6bm5g8z1hh7q8exi.webp');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+        }
+        .header {
+            background-color: rgba(215, 165, 191, 0.8);
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            border-bottom: 2px solid #d6a9c2;
+        }
+        .header img {
+            width: 100px;
+            height: 100px;
+            object-fit: cover;
+            margin-left: 15px;
+        }
+        .header .text-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .header h1 {
+            margin: 10px 0;
+            font-size: 28px;
+            color: #000000;
+        }
+        .nav {
+            display: flex;
+            justify-content: center;
+            background-color: #d6a9c2;
+            padding: 10px;
+        }
+        .nav a {
+            color: #ffffff;
+            text-decoration: none;
+            margin: 0 10px;
+            font-weight: bold;
+            font-size: 16px;
+        }
+        .container {
+            padding: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+            position: relative;
+        }
+        .flower-carousel {
+            display: flex;
+            overflow: hidden;
+            width: 100%;
+            justify-content: center;
+            position: relative;
+        }
+        .flower-card {
+            background-color: #ffffff;
+            border: 1px solid #e1e1e1;
+            border-radius: 10px;
+            margin: 10px;
+            padding: 20px;
+            box-shadow: 0 4px 8px rgba(255, 255, 255, 0.1);
+            flex: 0 0 auto;
+            width: 300px;
+            text-align: center;
+            position: relative;
+        }
+        .flower-card img {
+            width: 100%;
+            height: auto;
+            max-height: 200px;
+            border-radius: 5px;
+            object-fit: contain;
+        }
+        .flower-card div {
+            text-align: right;
+        }
+        .flower-card h3 {
+            margin: 0;
+            font-size: 20px;
+            color: #000000;
+        }
+        .flower-card p {
+            margin: 5px 0;
+            font-size: 16px;
+            color: #ff65a8;
+        }
+        .flower-card .price {
+            color: #ff2261;
+            font-weight: bold;
+            font-size: 18px;
+        }
+        .flower-card button {
+            background-color: #a5d6a7;
+            border: none;
+            color: white;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        .arrow-btn {
+            background-color: #d6a9c2;
+            border: none;
+            color: white;
+            padding: 12px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 24px;
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 1;
+        }
+        .arrow-left {
+            left: 10px;
+        }
+        .arrow-right {
+            right: 10px;
+        }
+        .footer {
+            background-color: #d6a9c2;
+            padding: 20px;
+            text-align: center;
+            color: white;
+            font-size: 14px;
+            margin-top: auto; /* Moves footer to the bottom */
+        }
+    </style>
+    <script>
+        /*
+        const token = localStorage.getItem('accessToken');
+        if (!token) {
+            window.location.href = 'login.html';
+        }
+        */
+    </script>
+</head>
+<body>
+    <header class="header">
+        <img src="https://cdn-icons-png.flaticon.com/256/3982/3982646.png" alt="صورة شخصية">
+        <div class="text-content">
+            <h1>متجر ليلاس</h1>
+        </div>
+    </header>
+    <nav class="nav">
+        <a href="flowerShop.html">الصفحة الرئيسية</a>
+        <a href="cart.html" id="cartLink">سلة التسوق</a>
+        <a href="user.html">حساب المستخدم</a>
+        <a href="#" id="logoutLink" style="display: none;" onclick="logout()">Logout</a>
+    </nav>
+    <div class="container">
+        <button class="arrow-btn arrow-left" onclick="flowerShop.prevFlower()">&#9664;</button>
+        <div class="flower-carousel" id="flowerCarousel"></div>
+        <button class="arrow-btn arrow-right" onclick="flowerShop.nextFlower()">&#9654;</button>
+    </div>
+    <footer class="footer">
+        <p>&copy; 2024 متجر ليلاس - جميع الحقوق محفوظة.</p>
+    </footer>
+
+    <script>
+        function logout() {
+            localStorage.removeItem('accessToken');
+            localStorage.removeItem('profile');
+            window.location.href = 'flowerShop.html';
+        }
+
+        function redirectToLoginPage() {
+            window.location.href = 'login.html?redirect=' + encodeURIComponent(window.location.href);
+        }
+
+        class FlowerShop {
+            constructor(flowers) {
+                this.flowers = flowers;
+                this.currentIndex = 0;
+                this.itemsPerPage = 3;
+                this.carousel = document.getElementById('flowerCarousel');
+                this.renderFlowers();
+                this.updateNav();
+            }
+
+            renderFlowers() {
+                this.carousel.innerHTML = '';
+                for (let i = 0; i < this.itemsPerPage; i++) {
+                    const index = (this.currentIndex + i) % this.flowers.length;
+                    const flower = this.flowers[index];
+                    const card = document.createElement('div');
+                    card.className = 'flower-card';
+                    card.innerHTML = `
+                        <img src="${flower.image}" alt="${flower.name}">
+                        <div>
+                            <h3>${flower.name}</h3>
+                            <p>${flower.description}</p>
+                            <p class="price">${flower.price}</p>
+                            <button onclick="flowerShop.addToCart(${index})">أضف إلى السلة</button>
+                        </div>
+                    `;
+                    this.carousel.appendChild(card);
+                }
+            }
+
+            prevFlower() {
+                this.currentIndex = (this.currentIndex - this.itemsPerPage + this.flowers.length) % this.flowers.length;
+                this.renderFlowers();
+            }
+
+            nextFlower() {
+                this.currentIndex = (this.currentIndex + this.itemsPerPage) % this.flowers.length;
+                this.renderFlowers();
+            }
+
+            addToCart(index) {
+                const isLoggedIn = !!localStorage.getItem('accessToken');
+                if (isLoggedIn) {
+                    const flower = this.flowers[index];
+                    const cart = JSON.parse(localStorage.getItem('cart')) || [];
+                    cart.push(flower);
+                    localStorage.setItem('cart', JSON.stringify(cart));
+                    alert('تمت إضافة العنصر إلى السلة!');
+                } else {
+                    redirectToLoginPage();
+                }
+            }
+
+            updateNav() {
+                const isLoggedIn = !!localStorage.getItem('accessToken');
+                document.getElementById('logoutLink').style.display = isLoggedIn ? 'block' : 'none';
+            }
+        }
+
+        const flowers = [
+            {
+                image: 'https://purepng.com/public/uploads/large/purepng.com-sunflowersunflowersunflower-plantsunflower-oilyellow-sunflower-1701527748624lndd8.png',
+                name: 'دوار الشمس',
+                description: 'زهور دوار الشمس هي من بين أجمل الزهور التي تنشر الفرح والألوان الزاهية.',
+                price: '100 ر.س'
+            },
+            {
+                image: 'https://purepng.com/public/uploads/large/purepng.com-bouquet-of-flowersbouquetflowersbasket-of-flowersclusterbunch-1701527697409ve1mj.png',
+                name: 'ورد ابيض',
+                description: 'الورد الأبيض يعكس النقاء والجمال. مثالي للمناسبات الخاصة.',
+                price: '150 ر.س'
+            },
+            {
+                image: 'https://purepng.com/public/uploads/large/purepng.com-bouquet-of-flowersbouquetflowersbasket-of-flowersclusterbunch-1701527690246tevok.png',
+                name: 'ورد احمر',
+                description: 'الورد الأحمر رمز الحب والعاطفة. اختره للتعبير عن مشاعرك.',
+                price: '120 ر.س'
+            },
+            {
+                image: 'https://purepng.com/public/uploads/large/purepng.com-tuliptuliptulip-flowerbellflowercampanula-1701527750436b4mur.png',
+                name: 'توليب',
+                description: 'زهور التوليب تمثل الأناقة والجمال في أبسط أشكالهما.',
+                price: '130 ر.س'
+            },
+            {
+                image: 'https://purepng.com/public/uploads/large/purepng.com-bouquet-of-flowersbouquetflowersbasket-of-flowersclusterbunch-1701527689671eggjj.png',
+                name: 'سلة ازهار',
+                description: 'سلة من الزهور المختارة بعناية، مثالية كهدية أو لتزيين المكان.',
+                price: '140 ر.س'
+            }
+        ];
+
+        const flowerShop = new FlowerShop(flowers);
+    </script>
+</body>
+</html>

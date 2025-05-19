@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>حساب المستخدم - متجر ليلاس</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap">
+
+    <style>
+        html, body {
+            height: 100%;
+            margin: 0;
+            font-family: 'Cairo', sans-serif;
+            direction: rtl;
+        }
+        body {
+            display: flex;
+            flex-direction: column;
+            margin: 0;
+            background-color: #f5f5f5;
+        }
+        .header {
+            background-color: rgba(215, 165, 191, 0.8);
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            border-bottom: 2px solid #d6a9c2;
+            position: relative;
+        }
+        .header img {
+            width: 100px;
+            height: 100px;
+            object-fit: cover;
+            margin-left: 15px;
+        }
+        .header .text-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .header h1 {
+            margin: 10px 0;
+            font-size: 28px;
+            color: #000000;
+        }
+        .nav {
+            display: flex;
+            justify-content: center;
+            background-color: #d6a9c2;
+            padding: 10px;
+        }
+        .nav a {
+            color: #ffffff;
+            text-decoration: none;
+            margin: 0 10px;
+            font-weight: bold;
+            font-size: 16px;
+        }
+        .container {
+            flex: 1; /* Makes the container expand to fill the remaining space */
+            padding: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .profile-info {
+            background-color: #ffffff;
+            border: 1px solid #e1e1e1;
+            border-radius: 10px;
+            margin: 10px 0;
+            padding: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        .profile-info h2 {
+            font-size: 24px;
+            margin-bottom: 15px;
+            color: #000000;
+        }
+        .profile-info p {
+            margin: 10px 0;
+            font-size: 16px;
+            color: #333;
+        }
+        .profile-info p strong {
+            color: #ff2261;
+        }
+        .footer {
+            background-color: #d6a9c2;
+            padding: 20px;
+            text-align: center;
+            color: white;
+            font-size: 14px;
+            margin-top: auto;
+        }
+    </style>
+    <script>
+        const token = localStorage.getItem('accessToken');
+        if (!token) {
+            window.location.href = 'login.html';
+        }
+    </script>
+</head>
+<body>
+    <header class="header">
+        <img src="https://cdn-icons-png.flaticon.com/256/3982/3982646.png" alt="صورة شخصية">
+        <div class="text-content">
+            <h1>متجر ليلاس</h1>
+        </div>
+    </header>
+    <nav class="nav">
+        <a href="flowerShop.html">الصفحة الرئيسية</a>
+        <a href="cart.html">سلة التسوق</a>
+        <a href="user.html">حساب المستخدم</a>
+        <a href="#" onclick="logout()">Logout</a>
+    </nav>
+    <div class="container">
+        <div class="profile-info">
+            <h2>معلومات الحساب</h2>
+            <p><strong>الاسم الأول:</strong> <span id="profileFirstName"></span></p>
+            <p><strong>الاسم الأخير:</strong> <span id="profileLastName"></span></p>
+            <p><strong>البريد الإلكتروني:</strong> <span id="profileEmail"></span></p>
+            <p><strong>رقم الهاتف:</strong> <span id="profilePhone"></span></p>
+        </div>
+    </div>
+    <footer class="footer">
+        <p>&copy; 2024 متجر ليلاس - جميع الحقوق محفوظة.</p>
+    </footer>
+
+    <script>
+        function logout() {
+            localStorage.removeItem('accessToken');
+            localStorage.removeItem('profile');
+            window.location.href = 'login.html';
+        }
+
+        // Function to load profile information from localStorage
+        function loadProfile() {
+            const profile = JSON.parse(localStorage.getItem('profile'));
+
+            if (profile) {
+                document.getElementById('profileFirstName').textContent = profile.firstName || 'غير متوفر';
+                document.getElementById('profileLastName').textContent = profile.lastName || 'غير متوفر';
+                document.getElementById('profileEmail').textContent = profile.email || 'غير متوفر';
+                document.getElementById('profilePhone').textContent = profile.phone || 'غير متوفر';
+            } else {
+                // Redirect to login if no profile info is found
+                window.location.href = 'login.html';
+            }
+        }
+
+        // Load profile information on page load
+        window.onload = loadProfile;
+    </script>
+    
+</body>
+</html>
