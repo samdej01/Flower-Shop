@@ -1,4 +1,4 @@
-# 🌸 Flower Shop Web Application 🌺 
+# 🌸 Flower Shop Web Application 
 
 A **full-stack flower shop web application** that allows users to browse flowers, add items to their cart, and interact with the platform through a clean and responsive interface.
 
